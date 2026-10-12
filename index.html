@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#111111">
+
   <title>Absensi QR Sekolah</title>
 
   <style>
@@ -17,92 +18,189 @@
       margin: 0;
       padding: 0;
       width: 100%;
-      height: 100%;
-      overflow: hidden;
+      min-height: 100%;
       font-family: Arial, Helvetica, sans-serif;
       background: #111111;
       color: #ffffff;
     }
 
-    .app-header {
-      height: 58px;
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    /* HEADER */
+    .header {
+      height: 60px;
+      min-height: 60px;
       width: 100%;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 18px;
+      padding: 0 20px;
       background: #111111;
       color: #ffffff;
-      border-bottom: 1px solid #444444;
+      border-bottom: 1px solid #3a3a3a;
     }
 
     .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       font-size: 16px;
       font-weight: bold;
       letter-spacing: 1px;
     }
 
-    .brand span {
-      display: inline-block;
-      margin-right: 8px;
-      padding: 5px 7px;
+    .brand-icon {
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border: 1px solid #ffffff;
-      border-radius: 5px;
-      font-size: 12px;
+      border-radius: 7px;
+      font-size: 13px;
+    }
+
+    .status {
+      font-size: 11px;
+      color: #cccccc;
+      border: 1px solid #444444;
+      border-radius: 20px;
+      padding: 6px 10px;
+    }
+
+    /* AREA APLIKASI */
+    .main {
+      flex: 1;
+      width: 100%;
+      min-height: 0;
+      background: #ffffff;
     }
 
     .app-frame {
       display: block;
       width: 100%;
-      height: calc(100% - 58px);
+      height: calc(100vh - 60px);
+      height: calc(100dvh - 60px);
       border: 0;
       background: #ffffff;
     }
 
-    .warning {
-      padding: 10px;
-      color: #ffffff;
-      font-size: 13px;
+    /* PESAN JIKA URL BELUM DIISI */
+    .setup-message {
+      display: none;
+      padding: 30px 20px;
+      color: #111111;
       text-align: center;
     }
 
+    .setup-message h2 {
+      font-size: 20px;
+    }
+
+    .setup-message p {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* TAMPILAN HP */
     @media (max-width: 600px) {
-      .app-header {
-        height: 52px;
+      .header {
+        height: 54px;
+        min-height: 54px;
         padding: 0 12px;
       }
 
       .brand {
-        font-size: 14px;
+        gap: 8px;
+        font-size: 13px;
+        letter-spacing: 0.5px;
+      }
+
+      .brand-icon {
+        width: 30px;
+        height: 30px;
+        font-size: 11px;
+      }
+
+      .status {
+        font-size: 10px;
+        padding: 5px 8px;
       }
 
       .app-frame {
-        height: calc(100% - 52px);
+        height: calc(100vh - 54px);
+        height: calc(100dvh - 54px);
       }
     }
   </style>
 </head>
 
 <body>
-  <header class="app-header">
+
+  <header class="header">
     <div class="brand">
-      <span>QR</span> ABSENSI SEKOLAH
+      <div class="brand-icon">QR</div>
+      <span>ABSENSI SEKOLAH</span>
     </div>
+
+    <div class="status">SISTEM ABSENSI</div>
   </header>
 
-  <iframe
-    class="app-frame"
-    src="TEMPEL_URL_WEB_APP_APPS_SCRIPT_DI_SINI"
-    title="Aplikasi Absensi QR Sekolah"
-    allow="camera; fullscreen"
-    allowfullscreen>
-  </iframe>
+  <main class="main">
+    <iframe
+      id="appFrame"
+      class="app-frame"
+      title="Aplikasi Absensi QR Sekolah"
+      allow="camera; fullscreen"
+      allowfullscreen
+      loading="eager">
+    </iframe>
+
+    <div id="setupMessage" class="setup-message">
+      <h2>URL Aplikasi Belum Diisi</h2>
+      <p>
+        Buka file index.html di GitHub, kemudian masukkan
+        URL Web App Google Apps Script pada bagian APP_URL.
+      </p>
+    </div>
+  </main>
+
+  <script>
+    /*
+     * MASUKKAN URL WEB APP GOOGLE APPS SCRIPT DI BAWAH.
+     * Gunakan URL deployment yang berakhiran /exec.
+     */
+    const APP_URL =
+      "TEMPEL_URL_WEB_APP_APPS_SCRIPT_DI_SINI";
+
+    const frame = document.getElementById("appFrame");
+    const setupMessage = document.getElementById("setupMessage");
+
+    if (
+      APP_URL &&
+      APP_URL !== "TEMPEL_URL_WEB_APP_APPS_SCRIPT_DI_SINI" &&
+      /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec\/?$/.test(APP_URL)
+    ) {
+      frame.src = APP_URL;
+      frame.style.display = "block";
+      setupMessage.style.display = "none";
+    } else {
+      frame.style.display = "none";
+      setupMessage.style.display = "block";
+    }
+  </script>
 
   <noscript>
-    <p class="warning">
-      Aktifkan JavaScript untuk menggunakan aplikasi.
+    <p style="padding:20px;color:white;text-align:center">
+      Aktifkan JavaScript untuk menggunakan aplikasi ini.
     </p>
   </noscript>
+
 </body>
 </html>
 ```
